@@ -10,6 +10,7 @@ const { normalizePath } = require('./utility/pathHelper');
 const { getInterfaces } = require('./parsers/getInterfaces');
 const { getClasses } = require('./parsers/getClasses');
 const { normalizeFirstLetter } = require('./utility/textUtilities');
+const { getFunctions } = require('./parsers/getFunctions');
 
 const filesToProcess = [
     { folder: 'server', path: path.join(process.cwd(), 'files', 'server.d.ts') },
@@ -22,7 +23,6 @@ async function processLineByLine(folder, filePath) {
     const content = fs.readFileSync(filePath).toString();
     const contentArray = contentsToArray(content);
     let contents = await removeComments(contentArray);
-    fs.writeFileSync('test', JSON.stringify(contents, null, '\t'));
 
     // Strips out enums, and returns modified contents without enums for next parse.
     const enums = await getEnums(contents);
@@ -48,10 +48,18 @@ async function processLineByLine(folder, filePath) {
     contents = classes.contents;
     Object.keys(classes.values).forEach(key => {
         const folderKey = normalizeFirstLetter(key);
-        exportToFolder(normalizePath(path.join(distPath, 'classes', folder, folderKey)), classes.values[key], 'function');
+        exportToFolder(normalizePath(path.join(distPath, folder, folderKey)), classes.values[key], 'function');
     });
 
-    console.log(contents);
+    const functions = await getFunctions(contents);
+    contents = functions.contents;
+    exportToFolder(normalizePath(path.join(distPath, folder)), functions.values, 'function');
+    console.log(`Functions -> ${Object.keys(types.values).length}`);
+
+    // Object.keys(classes.values).forEach(key => {
+    //     const folderKey = normalizeFirstLetter(key);
+    //     exportToFolder(normalizePath(path.join(distPath, folder, folderKey)), classes.values[key], 'function');
+    // });
 
     // exportToFolder(normalizePath(path.join(distPath, 'classes')), classes.values, 'interface');
     // console.log(`Classes -> ${Object.keys(classes.values).length}`);
