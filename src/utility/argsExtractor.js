@@ -1,13 +1,12 @@
 /**
  * 
  * @param {*} fullFunctionLine
- * @return { Array<{ {key: string, value: string }}> } 
+ * @return { Array<{ key: string, value: string }> } 
  */
 function argsExtractor(fullFunctionLine) {
-    const args = /(?<=\()(.*)(?=\):)/gm.exec(fullFunctionLine);
+    const args = /(?<=\()(.*)(?=\))/gm.exec(fullFunctionLine);
     if (!args || args.length <= 0) {
-        console.warn(`Could not find function in ${fullFunctionLine}`);
-        return undefined;
+        return [];
     }
 
     if (args[0] === '') {

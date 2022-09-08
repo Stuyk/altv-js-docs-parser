@@ -1,4 +1,5 @@
 const { normalizeFirstLetter } = require("../utility/textUtilities");
+const { argsExtractor } = require('../utility/argsExtractor');
 
 function append(value) {
     return `${value}\r\n`;
@@ -79,6 +80,16 @@ function frontMatterBuilder(title, contentValue, type) {
         documentText += append('```ts');
         documentText += append(contentValue);
         documentText += append('```');
+
+        const args = argsExtractor(contentValue);
+        if (args.length >= 1) {
+            documentText += append('');
+            documentText += append('### Arguments');
+            documentText += append('');
+            for (let arg of args) {
+                documentText += append(`* ${arg.key}: ${arg.value}`);
+            }
+        }
     }
 
     documentText += append('');

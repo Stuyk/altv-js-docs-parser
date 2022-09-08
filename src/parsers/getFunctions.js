@@ -29,11 +29,6 @@ async function getFunctions(contents) {
         }
 
         linesToRemove.push(i);
-
-        // console.log(contents[i]);
-        const args = argsExtractor(contents[i]);
-        console.log(args);
-
         functions[functionName] = contents[i].replace('export ', '');
     }
 
