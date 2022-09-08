@@ -1,4 +1,4 @@
-const { normalizeFirstLetter } = require("../utility/textUtilities");
+const { normalizeFirstLetter, capitalizeFirstLetter } = require("../utility/textUtilities");
 const { argsExtractor } = require('../utility/argsExtractor');
 const { returnExtractor } = require("../utility/returnExtractor");
 const { getLinkForType } = require("../utility/linkBuilder");
@@ -91,7 +91,12 @@ function frontMatterBuilder(title, contentValue, type, folder) {
         documentText += append('## Function Definition');
         documentText += append('');
         documentText += append('```ts');
-        documentText += append(contentValue);
+        if (contentValue.includes('constructor')) {
+            documentText += append(`const result = new ${contentValue.replace('constructor', capitalizeFirstLetter(title))}`);
+        } else {
+            documentText += append(contentValue);
+        }
+
         documentText += append('```');
 
         const args = argsExtractor(contentValue);
@@ -109,13 +114,7 @@ function frontMatterBuilder(title, contentValue, type, folder) {
             documentText += append('');
             documentText += append(`### Returns`);
             documentText += append('');
-            // Return types are really hard to deal with... leaving commented for now.
-            // const linkForReturnType = getLinkForType(returnType, folder);
-            // if (linkForReturnType) {
-            //     documentText += append(`* [${returnType}](${linkForReturnType})`);
-            // } else {
             documentText += append(`* ${returnType}`);
-            // }
         }
     }
 

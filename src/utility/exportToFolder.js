@@ -52,7 +52,15 @@ function exportToFolder(folder, values, type) {
                 fileName = potentialFileName[0]
             }
 
-            const title = fileName;
+            let title = fileName;
+
+            if (fileName === 'constructor') {
+                const fullPaths = folder.split('/');
+                const actualFileName = fullPaths[fullPaths.length - 1];
+                title = actualFileName;
+                fileName = actualFileName;
+            }
+
             fileName = normalizeFirstLetter(fileName) + '.md';
             const document = frontMatterBuilder(title, values[i], type, folder)
             fs.writeFileSync(normalizePath(path.join(folder, fileName)), document);
