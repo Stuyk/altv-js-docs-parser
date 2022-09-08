@@ -71,7 +71,13 @@ function argsExtractor(fullFunctionLine) {
             value += ':' + split.join(':');
         }
 
-        return { key, value: value.replace(' ', '') };
+        value = value.replace(' ', '');
+        value = value.replace(/</gm, '\\<')
+        value = value.replace(/>/gm, '\\>')
+        value = value.replace(/\}/gm, '\\}')
+        value = value.replace(/\{/gm, '\\{')
+
+        return { key, value };
     })
 }
 
