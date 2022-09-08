@@ -138,7 +138,8 @@ function getLinkForType(returnType, folderPath) {
     let linkToFolder;
     if (files.length >= 2) {
         const potentialFolder = folderPath.replace(normalizePath(path.join(process.cwd(), 'dist')), '');
-        const folderMatches = potentialFolder.split('/');
+        const folderMatches = potentialFolder.split('/').filter(x => x !== '');
+
         for (let match of folderMatches) {
             if (linkToFolder) {
                 break;

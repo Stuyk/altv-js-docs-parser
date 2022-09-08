@@ -64,10 +64,19 @@ async function processLineByLine(folder, filePath) {
 }
 
 async function start() {
+    console.log(`FIRST PASS THROUGH`)
     for (let i = 0; i < filesToProcess.length; i++) {
-        console.log(`Processing Folder: ${filesToProcess[i].folder}`);
+        console.log(`FOLDER --> ${filesToProcess[i].folder}`);
         await processLineByLine(filesToProcess[i].folder, filesToProcess[i].path);
     }
+
+    console.log(`SECOND PASS THROUGH`)
+    for (let i = 0; i < filesToProcess.length; i++) {
+        console.log(`FOLDER --> ${filesToProcess[i].folder}`);
+        await processLineByLine(filesToProcess[i].folder, filesToProcess[i].path);
+    }
+
+    console.log(`DONE`);
 }
 
 start();

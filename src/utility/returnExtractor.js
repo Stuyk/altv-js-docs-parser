@@ -5,6 +5,14 @@
  * @return {string | undefined}
  */
 function returnExtractor(fullFunctionLine) {
+    if (fullFunctionLine.includes('constructor')) {
+        return 'self';
+    }
+
+    if (fullFunctionLine.includes(');')) {
+        return 'void';
+    }
+
     let startPos = fullFunctionLine.length;
     let isGoingThroughCallback = false;
     for (let i = fullFunctionLine.length - 1; i >= 0; i--) {

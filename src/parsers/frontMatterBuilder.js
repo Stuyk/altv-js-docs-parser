@@ -109,12 +109,13 @@ function frontMatterBuilder(title, contentValue, type, folder) {
             documentText += append('');
             documentText += append(`### Returns`);
             documentText += append('');
-            const linkForReturnType = getLinkForType(returnType, folder);
-            if (linkForReturnType) {
-                documentText += append(`* [${returnType}](${linkForReturnType})`);
-            } else {
-                documentText += append(`* ${returnType}`);
-            }
+            // Return types are really hard to deal with... leaving commented for now.
+            // const linkForReturnType = getLinkForType(returnType, folder);
+            // if (linkForReturnType) {
+            //     documentText += append(`* [${returnType}](${linkForReturnType})`);
+            // } else {
+            documentText += append(`* ${returnType}`);
+            // }
         }
     }
 
