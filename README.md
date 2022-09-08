@@ -6,5 +6,6 @@ It parses typescript def files and outputs markdown files with frontmatter. Magi
 
 ```
 npm install
-node ./index.js
+
+npm run start
 ```
