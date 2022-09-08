@@ -29,7 +29,12 @@ function frontMatterBuilder(title, contentValue, type, folder) {
         documentText += append(`title: ${title}`);
     }
 
-    documentText += append(`order: 0`);
+    if (typeof contentValue === 'string' && contentValue.includes('constructor')) {
+        documentText += append(`order: -99`);
+    } else {
+        documentText += append(`order: 0`);
+    }
+
     documentText += append(`---`);
     documentText += append('');
     documentText += append('# {{ $frontmatter.title }}');
