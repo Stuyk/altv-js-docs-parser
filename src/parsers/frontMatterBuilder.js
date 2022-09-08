@@ -1,21 +1,34 @@
 const { normalizeFirstLetter } = require("../utility/textUtilities");
 const { argsExtractor } = require('../utility/argsExtractor');
+const { returnExtractor } = require("../utility/returnExtractor");
+const { getLinkForType } = require("../utility/linkBuilder");
 
+/**
+ * Simply adds a return line to a string.
+ *
+ * @param {*} value
+ * @return {*} 
+ */
 function append(value) {
     return `${value}\r\n`;
 }
-
 
 /**
  * A Front Matter Markdown Builder
  *
  * @param {string} title
  * @param {any} contentValue
- * @param { 'type' | 'enum' | 'interface' | 'function' } type
+ * @param { 'type' | 'enum' | 'interface' | 'function' | 'property' } type
  */
-function frontMatterBuilder(title, contentValue, type) {
+function frontMatterBuilder(title, contentValue, type, folder) {
     let documentText = append('---');
-    documentText += append(`title: ${title}`);
+
+    if (type === 'function') {
+        documentText += append(`title: ${title}()`);
+    } else {
+        documentText += append(`title: ${title}`);
+    }
+
     documentText += append(`order: 0`);
     documentText += append(`---`);
     documentText += append('');
@@ -90,6 +103,43 @@ function frontMatterBuilder(title, contentValue, type) {
                 documentText += append(`* ${arg.key}: ${arg.value}`);
             }
         }
+
+        const returnType = returnExtractor(contentValue);
+        if (returnType) {
+            documentText += append('');
+            documentText += append(`### Returns`);
+            documentText += append('');
+            const linkForReturnType = getLinkForType(returnType, folder);
+            if (linkForReturnType) {
+                documentText += append(`* [${returnType}](${linkForReturnType})`);
+            } else {
+                documentText += append(`* ${returnType}`);
+            }
+        }
+    }
+
+    if (type === 'property') {
+        documentText += append('## Property Definition');
+        documentText += append('');
+        documentText += append('```ts');
+        documentText += append(contentValue);
+        documentText += append('```');
+
+        const returnType = returnExtractor(contentValue);
+        if (returnType) {
+            documentText += append('');
+            documentText += append(`### Returns`);
+            documentText += append('');
+            documentText += append(`* ${returnType}`);
+        }
+
+        documentText += append('');
+        documentText += append('## General Usage');
+        documentText += append('');
+        documentText += append('```ts');
+        documentText += append(`const result = alt.${title};`);
+        documentText += append(`console.log(result);`);
+        documentText += append('```');
     }
 
     documentText += append('');

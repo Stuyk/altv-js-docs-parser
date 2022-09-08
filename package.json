@@ -13,5 +13,8 @@
     "semi": true,
     "printWidth": 900,
     "singleQuote": true
+  },
+  "dependencies": {
+    "glob": "^8.0.3"
   }
 }

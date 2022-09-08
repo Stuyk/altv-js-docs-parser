@@ -18,7 +18,7 @@ const removeUntilName = [
  * Export values to folder.
  * @param { string } folder
  * @param {{ [key: string]: Array<any> }} values
- * @param { 'type' | 'enum' | 'interface' | 'function' } type
+ * @param { 'type' | 'enum' | 'interface' | 'function' | 'property' } type
  */
 function exportToFolder(folder, values, type) {
     if (!fs.existsSync(folder)) {
@@ -41,7 +41,6 @@ function exportToFolder(folder, values, type) {
                 }
 
                 if (splitValues.length <= 0) {
-                    // console.log(splitValues);
                     continue;
                 }
 
@@ -55,7 +54,7 @@ function exportToFolder(folder, values, type) {
 
             const title = fileName;
             fileName = normalizeFirstLetter(fileName) + '.md';
-            const document = frontMatterBuilder(title, values[i], type)
+            const document = frontMatterBuilder(title, values[i], type, folder)
             fs.writeFileSync(normalizePath(path.join(folder, fileName)), document);
         }
         return;
@@ -65,7 +64,7 @@ function exportToFolder(folder, values, type) {
     for (let i = 0; i < keys.length; i++) {
         let title = keys[i];
         let fileName = normalizeFirstLetter(keys[i]) + '.md';
-        const document = frontMatterBuilder(title, values[title], type)
+        const document = frontMatterBuilder(title, values[title], type, folder)
         fs.writeFileSync(normalizePath(path.join(folder, fileName)), document);
     }
 }

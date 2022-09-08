@@ -1,17 +1,17 @@
 /**
- * Returns all functions in the root level of a module.
+ * Returns all properties in the root level of a module.
  *
  * @export
  * @param {Array<string>} contents
  * @returns { { contents: Array<string>, values: { [key: string ]: Array<string> } } }
  */
-async function getFunctions(contents) {
+async function getProperties(contents) {
     /** @type { { [key: string ]: Array<string> } } */
-    const functions = {};
+    const properties = {};
     let linesToRemove = [];
-    let functionName;
+    let propertyName;
     for (let i = 0; i < contents.length; i++) {
-        if (!contents[i].includes('function')) {
+        if (!contents[i].includes('export const')) {
             continue;
         }
 
@@ -20,14 +20,9 @@ async function getFunctions(contents) {
         }
 
         let splitLines = contents[i].split(' ')
-        if (splitLines.includes('export')) {
-            functionName = /.+?(?=(\(|<|:))/.exec(splitLines[2])[0];
-        } else {
-            functionName = /.+?(?=(\(|<|:))/.exec(splitLines[1])[0];
-        }
-
+        propertyName = splitLines[2].replace(':', '');
         linesToRemove.push(i);
-        functions[functionName] = contents[i].replace('export ', '');
+        properties[propertyName] = contents[i];
     }
 
     for (let i = contents.length - 1; i >= 0; i--) {
@@ -38,9 +33,9 @@ async function getFunctions(contents) {
         contents.splice(i, 1);
     }
 
-    return { contents, values: functions };
+    return { contents, values: properties };
 }
 
 module.exports = {
-    getFunctions
+    getProperties
 }
